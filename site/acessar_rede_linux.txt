@@ -1,0 +1,9 @@
+Página pessoal:
+
+	https://www.linux.ime.usp.br/~vitormelo
+
+Acesso:
+
+ssh  vitormelo@linux.ime.usp.br
+
+gag@paycheck@slick@trench
