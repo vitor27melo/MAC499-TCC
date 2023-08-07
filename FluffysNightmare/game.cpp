@@ -249,7 +249,7 @@ static void setup_opengl( int width, int height ){
 
   glm::mat4 projection = glm::perspective(
   // FOV & aspect
-  60.0f,  float(ratio), 
+  57.6f,  float(ratio), 
   // Near and far planes
   1.0f, 1024.0f);
   glLoadMatrixf(glm::value_ptr(projection));

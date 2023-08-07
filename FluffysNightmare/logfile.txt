@@ -1,1 +1,13 @@
 Log
+
+ handle_key >> entrou 
+
+ handle_key >> entrou 
+
+Handle Key << proxima 
+
+ProximaAcao << entrou 
+
+Handle Key << proxima 
+
+ProximaAcao << entrou 
