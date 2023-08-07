@@ -1,15 +1,17 @@
+#include <glad/gl.h>
+
 #include <glm/glm.hpp>
 #include <glm/geometric.hpp>
 #include <glm/trigonometric.hpp>
-#include "glm/gtc/matrix_transform.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <SDL2/SDL.h> 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_opengl.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+// #include <GL/gl.h>
+// #include <GL/glu.h>
 
 #include "drawFunctions.h"
 #include "Entidades.h"
@@ -32,6 +34,8 @@ using namespace std;
 #define numTelaInstrucoes 5
 
 #define PI 3.142857
+
+#define DEBUG 0
 
 // globais
 //The music that will be played
@@ -244,8 +248,6 @@ static void setup_opengl( int width, int height ){
    */
   glMatrixMode( GL_PROJECTION );
   glLoadIdentity( );
-  
-  // gluPerspective( 60.0, ratio, 1.0, 1024.0 );
 
   glm::mat4 projection = glm::perspective(
   // FOV & aspect
@@ -959,6 +961,8 @@ int main( int argc, char* argv[] ){
 
   SDL_Surface *imgArrow = load_image((char*)"texture/arrow.png");
 
+  if (DEBUG) fprintf(stderr, "\nPassed line 964\n");
+
   TelaMenu.background = load_image((char*)"texture/TelasMenu/menu.png");
   TelaMenu.nomeTela = Menu;
   TelaMenu.x1=654;
@@ -1008,6 +1012,7 @@ int main( int argc, char* argv[] ){
       printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
   }
   
+  if (DEBUG) fprintf(stderr, "\nPassed line 1015\n");
 
  //Load music
  //https://www.looperman.com/loops/detail/314853/subspace-club-type-sample-free-115bpm-disco-pad-loop
@@ -1019,6 +1024,9 @@ int main( int argc, char* argv[] ){
 			    SDL_WINDOW_OPENGL);
   assert(Window);
   SDL_GLContext Context = SDL_GL_CreateContext(Window);
+
+  int version = gladLoadGL((GLADloadfunc) SDL_GL_GetProcAddress);
+  printf("GL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
   
   /*
    * Now, we want to setup our requested
@@ -1037,6 +1045,9 @@ int main( int argc, char* argv[] ){
    * the standard 2D blitting setup.
      */
     //set texturas etc
+
+    if (DEBUG) fprintf(stderr, "\nPassed line 1046\n");
+
     if (1){
       SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
       SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
@@ -1135,6 +1146,7 @@ int main( int argc, char* argv[] ){
       
             
       // ---
+if (DEBUG) fprintf(stderr, "\nPassed line 1143\n");
 glBindTexture(GL_TEXTURE_2D, tex[6]);
       glTexParameteri(GL_TEXTURE_2D,
           GL_TEXTURE_MAG_FILTER,

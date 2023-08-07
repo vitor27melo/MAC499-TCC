@@ -7,7 +7,7 @@ CC=gcc
 
 
 game: Entidades.o drawFunctions.o game.cpp 
-	$(CXX) Entidades.o drawFunctions.o -O3 game.cpp -I./glm -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_gfx -lSDL2_mixer -lGL -lGLU -o game
+	$(CXX) Entidades.o drawFunctions.o -O3 game.cpp glad/src/gl.c -I./glad/include/ -I./glm -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_gfx -lSDL2_mixer -lGL -lGLU -o game
 
 lib: drawFunctions.cpp
 	$(CXX) drawFunctions.cpp -lm -lSDL2 -lSDL2_image -lSDL2_gfx -lSDL2_mixer -lGL -lGLU -c
