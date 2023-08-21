@@ -1,3 +1,5 @@
+// Fonte: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader_s.h (ADAPTADO)
+
 #ifndef SHADER_H
 #define SHADER_H
 
@@ -12,33 +14,31 @@ class Shader
 {
 public:
     unsigned int ID;
-    // constructor generates the shader on the fly
-    // ------------------------------------------------------------------------
+
     Shader(const char* vertexPath, const char* fragmentPath)
     {
-        // 1. retrieve the vertex/fragment source code from filePath
         std::string vertexCode;
         std::string fragmentCode;
+        // Instancia os objetos filebuf para leitura dos códigos-fonte dos shaders 
         std::ifstream vShaderFile;
         std::ifstream fShaderFile;
-        // ensure ifstream objects can throw exceptions:
+        // Permite que os buffers possam lançar excessões
         vShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
         fShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
         try 
         {
-            // open files
+            // Abre os arquivos contendo os códigos-fonte
             vShaderFile.open(vertexPath);
             fShaderFile.open(fragmentPath);
             std::stringstream vShaderStream, fShaderStream;
-            // read file's buffer contents into streams
+            // Realiza a leitura dos arquivos
             vShaderStream << vShaderFile.rdbuf();
             fShaderStream << fShaderFile.rdbuf();
-            // close file handlers
-            vShaderFile.close();
-            fShaderFile.close();
-            // convert stream into string
             vertexCode   = vShaderStream.str();
             fragmentCode = fShaderStream.str();
+            // Fecha os file handlers
+            vShaderFile.close();
+            fShaderFile.close();
         }
         catch (std::ifstream::failure& e)
         {
