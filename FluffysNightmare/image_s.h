@@ -14,7 +14,7 @@ public:
         surface = IMG_Load( path ); 
 
         if( surface == NULL ) {
-            fprintf(stderr, "Não foi carregar o arquivo de imagem: %s\n", path );
+            fprintf(stderr, "ERRO:SDL_IMAGE:Não foi possível carregar o arquivo de imagem: %s\n", path );
         }
 
         // Arquivos de imagem geralmente consideram a margem superioresquerdo como à que possui coordenadas
