@@ -1,6 +1,6 @@
-#include "image_s.h"
-#include "shader_s.h"
-#include "camera_s.h"
+#include "texture.h"
+#include "shader.h"
+#include "camera.h"
 
 #include <glad/gl.h>
 
@@ -17,6 +17,9 @@
 #include <SDL2/SDL_opengl.h>
 
 #include <iostream>
+#include <map>
+
+Texture *textures;
 
 static SDL_Window *Window;
 static SDL_GLContext Context;
@@ -37,7 +40,7 @@ float deltaTime = 0.1f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
 void panicExit(int code) {
-    fprintf(stderr, "FATAL:Foi preciso fnalizar oprocesso\n");
+    fprintf(stderr, "FATAL:Foi preciso fnalizar o processo\n");
     SDL_Quit();
     exit(code);
 }
@@ -45,6 +48,42 @@ void panicExit(int code) {
 //TODO
 void windowResize(int width, int heigth) {
     
+}
+
+void loadTextures() {
+    textures = (Texture*)malloc(sizeof(Texture) * 26);
+    // Texturas do MENU PRINCIPAL
+    textures[0] = Texture((char*)"./assets/textures/menu/1.png");
+    textures[1] = Texture((char*)"./assets/textures/menu/2.png");
+    textures[2] = Texture((char*)"./assets/textures/menu/3.png");
+    textures[3] = Texture((char*)"./assets/textures/menu/4.png");
+    textures[4] = Texture((char*)"./assets/textures/menu/5.png");
+    textures[5] = Texture((char*)"./assets/textures/menu/arrow.png");
+    // Texturas da TELA DE INSTRUÇÕES
+    textures[6] = Texture((char*)"./assets/textures/instrucoes/1.png");
+    textures[7] = Texture((char*)"./assets/textures/instrucoes/2.png");
+    textures[8] = Texture((char*)"./assets/textures/instrucoes/3.png");
+    textures[9] = Texture((char*)"./assets/textures/instrucoes/4.png");
+    textures[10] = Texture((char*)"./assets/textures/instrucoes/5.png");
+    // Texturas de BLOCOS FIXOS
+    textures[11] = Texture((char*)"./assets/textures/block_fixo/1.png");
+    textures[12] = Texture((char*)"./assets/textures/block_fixo/2.png");
+    textures[13] = Texture((char*)"./assets/textures/block_fixo/3.png");
+    textures[14] = Texture((char*)"./assets/textures/block_fixo/4.png");
+    textures[15] = Texture((char*)"./assets/textures/block_fixo/5.png");
+    // Texturas de BLOCOS FINAIS FIXOS
+    textures[16] = Texture((char*)"./assets/textures/block_final_fixo/1.png");
+    textures[17] = Texture((char*)"./assets/textures/block_final_fixo/2.png");
+    textures[18] = Texture((char*)"./assets/textures/block_final_fixo/3.png");
+    textures[19] = Texture((char*)"./assets/textures/block_final_fixo/4.png");
+    // Texturas de BLOCOS FINAIS MÓVEIS
+    textures[20] = Texture((char*)"./assets/textures/block_final_movel/1.png");
+    textures[21] = Texture((char*)"./assets/textures/block_final_movel/2.png");
+    textures[22] = Texture((char*)"./assets/textures/block_final_movel/3.png");
+    textures[23] = Texture((char*)"./assets/textures/block_final_movel/4.png");
+    // Texturas de PAREDE
+    textures[24] = Texture((char*)"./assets/textures/parede/1.png");
+    textures[25] = Texture((char*)"./assets/textures/parede/2.png");
 }
 
 void processEvents(SDL_Event event) {
@@ -164,107 +203,7 @@ void setupLibraries() {
     glEnable(GL_DEPTH_TEST); 
 }
 
-void test() {
-    Shader ourShader("./shaders/shader.vs", "./shaders/shader.fs");
-
-    float vertices[] = {
-        // positions          // texture coords
-        1.0f,  1.0f, 0.0f,   1.0f, 1.0f,   // top right
-        1.0f, -1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-        -1.0f, -1.0f, 0.0f,   0.0f, 0.0f,   // bottom left
-        -1.0f,  1.0f, 0.0f,   0.0f, 1.0f    // top left 
-    };
-
-    unsigned int indices[] = {  
-        0, 1, 3, // first triangle
-        1, 2, 3
-    };
-
-
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // texture attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
-    glEnableVertexAttribArray(1);
- 
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
-    glBindVertexArray(0); 
-
-
-    Image wall((char*)"./assets/textures/telas_menu/1.png");
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);  
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wall.surface->w, wall.surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, wall.surface->pixels);
-
-    glGenerateMipmap(GL_TEXTURE_2D);
-    
-
-    GLenum  erro;
-    erro = glGetError();  
-    fprintf(stderr, "%d", erro);
-    SDL_Event event;
-
-    glm::mat4 trans = glm::mat4(1.0f);
-
-    unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-    
-
-    while (1)
-    {
-        while( SDL_PollEvent( &event ) ) {
-            switch( event.type ) {
-                case SDL_WINDOWEVENT:
-                    switch (event.window.event) {
-                        case SDL_WINDOWEVENT_RESIZED:
-                            windowResize(event.window.data1, event.window.data2);
-                        break;
-                    }
-                break;
-                case SDL_KEYDOWN:
-                    fprintf(stderr, "keydown");
-                break;
-                case SDL_QUIT:
-                    panicExit( 0 );
-                break;
-            }
-        }
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        // // draw our first triangle
-
-        trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans = glm::rotate(trans, (float)(SDL_GetTicks()/100), glm::vec3(0.0f, 0.0f, 1.0f));
-
-        ourShader.use();
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-        // glUniform4f(vertexColorLocation, 0.0f, (sin(SDL_GetTicks()*1000) / 2.0f) + 0.5f, 0.0f, 1.0f);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0); // no need to unbind it every time 
-        SDL_GL_SwapWindow(Window);
-    }
-}
-
-void test2() {
+void renderLoop() {
     Shader ourShader("./shaders/shader.vs", "./shaders/shader.fs");
 
     float vertices[] = {
@@ -343,45 +282,20 @@ void test2() {
     glBindVertexArray(0); 
 
 
-    Image wall((char*)"./assets/textures/telas_menu/1.png");
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);  
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wall.surface->w, wall.surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, wall.surface->pixels);
-
-    glGenerateMipmap(GL_TEXTURE_2D);
-    
-
-    GLenum  erro;
-    erro = glGetError();  
-    fprintf(stderr, "%d", erro);
-    
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
-
-    glm::mat4 view = camera.GetViewMatrix();
-    // note that we're translating the scene in the reverse direction of where we want to move
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
-
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(camera.Zoom), 1067.0f / 600.0f, 0.1f, 100.0f);
-
-    int modelLoc = glGetUniformLocation(ourShader.ID, "model");
-    int viewLoc = glGetUniformLocation(ourShader.ID, "view");
-    int projectionLoc = glGetUniformLocation(ourShader.ID, "projection");
-
-
-    glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
-    const float cameraSpeed = 0.05f;
-
-    
 
     SDL_Event event;
+    int i = 0;
     while (1)
     {
+        if (i < 1000) {
+            textures[0].use();
+        } else if (i < 2000){
+            textures[1].use();
+        } else {
+            textures[2].use();
+        }
+        i = i + 1;
+
         // Processa entradas de mouse e de teclado
         processEvents(event);
         // Limpamos, a cada frame, o buffer de profundidade e o buffer de cor
@@ -390,24 +304,24 @@ void test2() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         // Pede p/ o OpenGL usar nosso programa de shaders
         ourShader.use();
-
+    	// Calcula a matriz de projeção e a binda ao shader
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         ourShader.setMat4("projection", projection);
-
-        // camera/view transformation
+        // Calcula a matrix view (da câmera) e a binda ao shader
         glm::mat4 view = camera.GetViewMatrix();
         ourShader.setMat4("view", view);
 
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        // glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        // glUniform4f(vertexColorLocation, 0.0f, (sin(SDL_GetTicks()*1000) / 2.0f) + 0.5f, 0.0f, 1.0f);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        // CRIAR LOOP DE DESENHOS
+        // drawCubes(ourShader);
+        glm::mat4 model = glm::mat4(1.0f);
+        ourShader.setMat4("model", model);
+        // glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0); // no need to unbind it every time 
-        SDL_GL_SwapWindow(Window);
         
+        // Atualiza a janela com renderização OpenGL
+        SDL_GL_SwapWindow(Window);
     }
 }
 
@@ -420,8 +334,9 @@ int main() {
     gMusic = Mix_LoadMUS( "assets/sounds/looperman-l-5041336-0314853-subspace-club-type-sample.wav" );
     // Mix_PlayMusic( gMusic, -1 );
 
-    test2();
+    loadTextures();
 
-    std::cin.ignore();
+    renderLoop();
+
     return 0;
 }
