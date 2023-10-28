@@ -1,0 +1,23 @@
+Introdução (5 páginas)
+	- Vender o projeto / tamanho da indústria de video-games / falar sobre ela no brasil / % do opengl no mercado
+	- Explicar pq o jogo foi escolhido
+	- Novo lançamento do Catherine
+	- Histórico do jogo do catherine
+	- Levantamento geral sobre esse jogo
+	- Explorar o motivo da escolha do opengl (poder citar a polêmica do unity)
+
+
+Refatoração e implementação do modo restrito (10 páginas) :
+	- entrar em um pouco de detalhes (n tanto assim) sobre o que aprendi e mostrar exemplos de diferenças de funções de desenho
+
+
+Implementação de diferentes modelos de iluminação ( max 5 páginas)
+	- blin phong
+	- sombra
+	
+Implementação de novas features e aumento da complexidade do jogo (10 páginas)
+
+Conclusões
+
+
+trasladas as coordenasas vs trasladar os vértices
