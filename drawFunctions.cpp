@@ -118,163 +118,6 @@ void setupBlockVAO(float d)
   blockVAO = VAO;
 }
 
-// void setupHairVAO(float R, float G, float B){
-//   float th0, th1;
-//   float hair_R = 8.0;
-//   th0 = 90.0;
-//   th1 = 180.0;
-//   hairVAO = curvedXCylinderVAO(3.0,
-// 				  0.0,
-// 				  hair_R,
-// 				  th0, th1,
-// 				  R, G, B,
-// 				  20, 4);
-// }
-
-// unsigned int curvedXCylinderVAO(float radius0,
-// 				      float radius1,
-// 				      float bend_radius,
-// 				      float bend_ang0,
-// 				      float bend_ang1,
-// 				      float R, float G, float B,
-// 				      int slices,
-// 				      int dtheta){
-//   unsigned int VAO;
-//   unsigned int VBO;
-//   float *vertices;
-//   float w0, w1, ang0, ang1, angle, x0, y0, x1, y1, xb, yb, zb;
-//   float cos_angle, sin_angle, cos_ang0, sin_ang0, cos_ang1, sin_ang1;
-//   float rad0, rad1, mag;
-//   float C[3];
-//   int t = 0;
-//   int i, j, k, n;
-
-//   n = slices*(360/dtheta+1)*2*11;
-//   k = 0;
-//   vertices = (float *)calloc(n, sizeof(float));
-
-//   bend_ang0 *= (PI / 180.0f);
-//   bend_ang1 *= (PI / 180.0f);
-//   for(i = 0; i < slices; i++){
-//     w0 = (float)i / (float)slices;
-//     w1 = (float)(i+1) / (float)slices;
-//     ang0 = bend_ang0*(1.0-w0) + bend_ang1*w0;
-//     ang1 = bend_ang0*(1.0-w1) + bend_ang1*w1;
-
-//     rad0 = radius0*(1.0-w0) + radius1*w0;
-//     rad1 = radius0*(1.0-w1) + radius1*w1;    
-
-//     sin_ang0 = sinf(ang0);
-//     cos_ang0 = cosf(ang0);
-//     sin_ang1 = sinf(ang1);
-//     cos_ang1 = cosf(ang1);
-    
-//     //glBegin(GL_QUAD_STRIP);
-//     for(j = 0; j <= 360; j+= dtheta){
-//       angle = (float)j * (PI / 180.0f);
-//       cos_angle = cosf(angle);
-//       sin_angle = sinf(angle);
-//       y0 = rad0 * cos_angle + bend_radius;
-//       x0 = rad0 * sin_angle;
-//       y1 = rad1 * cos_angle + bend_radius;
-//       x1 = rad1 * sin_angle;
-      
-//       C[0] = x0;
-//       C[1] = sin_ang0*rad0*cos_angle;
-//       C[2] = cos_ang0*rad0*cos_angle;
-//       mag = magnitude(C);
-//       C[0] /= mag;
-//       C[1] /= mag;
-//       C[2] /= mag;
-//       //glNormal3f(C[0], C[1], C[2]);
-//       yb = sin_ang0 * y0;
-//       xb = x0;
-//       zb = cos_ang0 * y0;
-//       //glVertex3f( xb, yb, zb );
-//       vertices[k] = xb; k++;
-//       vertices[k] = yb; k++;
-//       vertices[k] = zb; k++;
-
-//       //Colors:
-//       vertices[k] = R; k++;
-//       vertices[k] = G; k++;
-//       vertices[k] = B; k++;
-
-//       //Texture:
-//       vertices[k] = t;   k++;
-//       vertices[k] = 0.0; k++;
-
-//       //Normals:
-//       vertices[k] = C[0]; k++;
-//       vertices[k] = C[1]; k++;
-//       vertices[k] = C[2]; k++;
-      
-//       C[0] = x1;
-//       C[1] = sin_ang1*rad1*cos_angle;
-//       C[2] = cos_ang1*rad1*cos_angle;
-//       mag = magnitude(C);
-//       C[0] /= mag;
-//       C[1] /= mag;
-//       C[2] /= mag;
-//       //glNormal3f(C[0], C[1], C[2]);
-//       yb = sin_ang1 * y1;
-//       xb = x1;
-//       zb = cos_ang1 * y1;
-//       //glVertex3f( xb, yb, zb );
-//       vertices[k] = xb; k++;
-//       vertices[k] = yb; k++;
-//       vertices[k] = zb; k++;
-
-//       //Colors:
-//       vertices[k] = R; k++;
-//       vertices[k] = G; k++;
-//       vertices[k] = B; k++;
-
-//       //Texture:
-//       vertices[k] = t;   k++;
-//       vertices[k] = 1.0; k++;
-
-//       //Normals:
-//       vertices[k] = C[0]; k++;
-//       vertices[k] = C[1]; k++;
-//       vertices[k] = C[2]; k++;
-
-//       t++;
-//       t = t%2;
-//     }
-//     //glEnd();
-//   }
-
-//   glGenVertexArrays(1, &VAO);
-//   glGenBuffers(1, &VBO);
-  
-//   glBindVertexArray(VAO);
-  
-//   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//   glBufferData(GL_ARRAY_BUFFER, n*sizeof(float), vertices, GL_DYNAMIC_DRAW);
-
-//   // position attribute
-//   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float),
-// 			(void*)0);
-//   glEnableVertexAttribArray(0);
-//   // color attribute
-//   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float),
-// 			(void*)(3* sizeof(float)));
-//   glEnableVertexAttribArray(1);
-//   // texture attribute
-//   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float),
-// 			(void*)(6 * sizeof(float)));
-//   glEnableVertexAttribArray(2);
-//   // normal attribute
-//   glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float),
-// 			(void*)(8 * sizeof(float)));
-//   glEnableVertexAttribArray(3);
-
-//   free(vertices);
-//   return VAO;
-// }
-
-
 // FIM SETUP VAOS
 
 
@@ -304,6 +147,7 @@ unsigned int create_curved_cylinder_y(float radius0,
   int i, j, k, n;
 
   n = slices*(360/dtheta+1)*2*11;
+  
   k = 0;
   vertices = (float *)calloc(n, sizeof(float));
 
@@ -842,6 +686,7 @@ void drawCube(GLuint tex[], struct GameData *GD, int id1, int id2)
 void draw_curved_cylinder_x(unsigned int VAO,
 			    int slices,
 			    int dtheta){
+  slices = 10;
   int i,k;
   glBindVertexArray(VAO);
   k = 0;
@@ -854,6 +699,7 @@ void draw_curved_cylinder_x(unsigned int VAO,
 void draw_curved_cylinder_y(unsigned int VAO,
 			    int slices,
 			    int dtheta){
+  slices = 10;
   int i,k;
   glBindVertexArray(VAO);
   k = 0;
@@ -869,7 +715,7 @@ void draw_ellipsoid_lune(unsigned int VAO,
 			 int angle1, int angle2,
 			 int slices){
   int i,k;
-
+  slices = 40;
   glBindVertexArray(VAO);
   k = 0;
   for(i = 0; i < slices; i++){
@@ -895,6 +741,7 @@ unsigned int create_hairy_ellipsoid(float R, float G, float B){
 unsigned int create_ellipsoid(float a, float b, float c,
 			      float R, float G, float B,
 			      int slices){
+  slices = 10;
   unsigned int VAO;
   unsigned int VBO;
   float *vertices;
@@ -1025,7 +872,7 @@ unsigned int create_ellipsoid(float a, float b, float c,
 void draw_ellipsoid(unsigned int VAO,
 		    int slices){
   int i,k,dangle = 1; //2;
-
+  slices = 40;
   glBindVertexArray(VAO);
   k = 0;
   for(i = 0; i < slices; i++){
@@ -1040,152 +887,15 @@ void draw_cylinder_z(unsigned int VAO,
   glDrawArrays(GL_TRIANGLE_STRIP, 0, (360/dtheta+1)*2);
 }
 
-
-void draw_ellipsoid(float a,
-                    float b,
-                    float c,
-                    int slices)
-{
-  GLfloat w0, w1, angle, x0, y0, z0, x1, y1, z1, xb, yb, zb;
-  float cos_angle, sin_angle;
-  float mag, a0, a1, b0, b1;
-  float C[3];
-  int i, j;
-  for (i = 0; i < slices; i++)
-  {
-    w0 = (float)i / (float)slices;
-    w1 = (float)(i + 1) / (float)slices;
-
-    z0 = (-c) * (1.0 - w0) + c * w0;
-    z1 = (-c) * (1.0 - w1) + c * w1;
-
-    b0 = sqrtf(b * b * (1.0 - (z0 * z0) / (c * c)));
-    b1 = sqrtf(b * b * (1.0 - (z1 * z1) / (c * c)));
-
-    a0 = sqrtf(a * a * (1.0 - (z0 * z0) / (c * c)));
-    a1 = sqrtf(a * a * (1.0 - (z1 * z1) / (c * c)));
-
-    glBegin(GL_QUAD_STRIP);
-    for (j = 0; j <= 360; j++)
-    {
-      angle = (float)j * (PI / 180.0f);
-      cos_angle = cosf(angle);
-      sin_angle = sinf(angle);
-      x0 = a0 * cos_angle;
-      y0 = b0 * sin_angle;
-      x1 = a1 * cos_angle;
-      y1 = b1 * sin_angle;
-
-      C[0] = (2.0 * x0) / (a * a);
-      C[1] = (2.0 * y0) / (b * b);
-      C[2] = (2.0 * z0) / (c * c);
-      mag = magnitude(C);
-      C[0] /= mag;
-      C[1] /= mag;
-      C[2] /= mag;
-      glNormal3f(C[0], C[1], C[2]);
-
-      glVertex3f(x0, y0, z0);
-
-      C[0] = (2.0 * x1) / (a * a);
-      C[1] = (2.0 * y1) / (b * b);
-      C[2] = (2.0 * z1) / (c * c);
-      mag = magnitude(C);
-      C[0] /= mag;
-      C[1] /= mag;
-      C[2] /= mag;
-      glNormal3f(C[0], C[1], C[2]);
-
-      glVertex3f(x1, y1, z1);
-    }
-    glEnd();
-  }
-}
-
-void draw_ellipsoid_lune(float a,
-                         float b,
-                         float c,
-                         int angle1,
-                         int angle2,
-                         int slices)
-{
-  GLfloat w0, w1, angle, x0, y0, z0, x1, y1, z1, xb, yb, zb;
-  float cos_angle, sin_angle;
-  float mag, a0, a1, b0, b1;
-  float C[3];
-  int i, j;
-
-  float vertices[10];
-  int cont = 0;
-  for (i = 0; i < slices; i++)
-  {
-    cont = 0;
-    w0 = (float)i / (float)slices;
-    w1 = (float)(i + 1) / (float)slices;
-
-    z0 = (-c) * (1.0 - w0) + c * w0;
-    z1 = (-c) * (1.0 - w1) + c * w1;
-
-    b0 = sqrtf(b * b * (1.0 - (z0 * z0) / (c * c)));
-    b1 = sqrtf(b * b * (1.0 - (z1 * z1) / (c * c)));
-
-    a0 = sqrtf(a * a * (1.0 - (z0 * z0) / (c * c)));
-    a1 = sqrtf(a * a * (1.0 - (z1 * z1) / (c * c)));
-
-    glBegin(GL_QUAD_STRIP);
-    for (j = angle1; j <= angle2; j++)
-    {
-      angle = (float)j * (PI / 180.0f);
-      cos_angle = cosf(angle);
-      sin_angle = sinf(angle);
-      x0 = a0 * cos_angle;
-      y0 = b0 * sin_angle;
-      x1 = a1 * cos_angle;
-      y1 = b1 * sin_angle;
-
-      C[0] = (2.0 * x0) / (a * a);
-      C[1] = (2.0 * y0) / (b * b);
-      C[2] = (2.0 * z0) / (c * c);
-      mag = magnitude(C);
-      C[0] /= mag;
-      C[1] /= mag;
-      C[2] /= mag;
-      glNormal3f(C[0], C[1], C[2]);
-
-      glVertex3f(x0, y0, z0);
-
-      C[0] = (2.0 * x1) / (a * a);
-      C[1] = (2.0 * y1) / (b * b);
-      C[2] = (2.0 * z1) / (c * c);
-      mag = magnitude(C);
-      C[0] /= mag;
-      C[1] /= mag;
-      C[2] /= mag;
-      glNormal3f(C[0], C[1], C[2]);
-
-      glVertex3f(x1, y1, z1);
-    }
-    glEnd();
-  }
-}
-
 void draw_hairy_ellipsoid(unsigned int VAO,
 			  glm::mat4 std_model, glm::mat4 std_normal,
 			  unsigned int modelLoc, unsigned int normalLoc,
 			  float a, float b, float c,
 			  int slices){
+  slices = 40;
   glm::mat4 model = glm::mat4(1.0f);
   glm::mat4 normal = glm::mat4(1.0f);
 
-  // int k;
-  // glBindVertexArray(hairVAO);
-  // k = 0;
-  // for(int i = 0; i < 20; i++){
-  //   glDrawArrays(GL_TRIANGLE_STRIP, k, (360/4+1)*2);
-  //   k += (360/4+1)*2;
-  // }
-  // glBindVertexArray(0);
-  // return;
   float w0, w1, angle, x0, y0, z0, x1, y1, z1, xb, yb, zb;
   float cos_angle, sin_angle, hair_theta, hair_R;
   float mag, a0, a1, b0, b1, th0, th1, c_th0, s_th0;
@@ -2106,11 +1816,11 @@ void DrawFluffyWalk(
     feet_VAO[0] = create_ellipsoid_lune(a*0.30, b*0.10, c*0.70,
 					0,  180,
 					1.0, 0.0, 0.0,
-					40);
+					10);
     feet_VAO[1] = create_ellipsoid_lune(a*0.30, b*0.10, c*0.70,
 					0,  180,
 					1.0, 0.0, 0.0,
-					40);
+					10);
   }
   normal = std_normal;
   model = std_model;

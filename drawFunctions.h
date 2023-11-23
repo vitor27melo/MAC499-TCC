@@ -72,21 +72,6 @@ void draw_ellipsoid_lune(float a,
 
 
 
-void draw_hairy_ellipsoid(float a,
-			  float b,
-			  float c,
-			  int slices,
-			Shader simpleShader,
-          unsigned int curvedHairVAO);
-
-
-void draw_hairy_ellipsoid(float a,
-			  float b,
-			  float c,
-			  int slices);
-
-
-
 void DrawFluffy(unsigned int shaderID,
 		     float deltaTime,
 		     bool restart,

@@ -49,7 +49,7 @@ int gameSeconds = 0;
 #define MAX_FRAMERATE 0
 
 // This valued multiplied by "deltaTime" to determine how fast things move in the game 
-float speedMult = 5;
+float speedMult = 2;
 
 
 #define PI 3.142857
@@ -287,7 +287,7 @@ void updateCamera(struct GameData *GD) {
   switch(GD->Torre->stages[GD->Player->levelStage - 1]) {
     case Rapunzel:
       if (camera.Pitch > -35.0f && camera.Pitch <= 0.0f) {
-        camera.ChangePitch(-1*(deltaTime * 25));
+        camera.ChangePitch(-1*(deltaTime * 40));
       } 
       if ((camera.Position[1] - (GD->Player->pos->y * d)) < 250.0f) {
         camera.Position[1] += deltaTime * speedMult * d;
@@ -371,7 +371,7 @@ void drawScreen(SDL_Window *Window,
     simpleShader.use();
     firstRun = 0;
   }
-  updateCamera(GD);
+  // updateCamera(GD);
   static enum animacaoPlayer last_anim = AnimNormal;
 
   float di, dj, dk;
