@@ -49,7 +49,7 @@ int gameSeconds = 0;
 #define MAX_FRAMERATE 0
 
 // This valued multiplied by "deltaTime" to determine how fast things move in the game 
-float speedMult = 2;
+float speedMult = 4;
 
 
 #define PI 3.142857
@@ -158,9 +158,96 @@ SDL_Surface *loadImage(char *filename)
   return loadedImage;
 }
 
-// bool checkSquaredLocation(posicao pos) {
-//   if (pos.x)
-// }
+
+void flipSurfaceVertical(SDL_Surface *surface) 
+{
+    // Permite acesso ao ponteiro pixels da SDL_Surface
+    SDL_LockSurface(surface);
+    
+    int pitch = surface->pitch;
+    char* temp = new char[pitch];
+    char* pixels = (char*) surface->pixels;
+    
+    for(int i = 0; i < surface->h / 2; ++i) {
+        char* row1 = pixels + i * pitch;
+        char* row2 = pixels + (surface->h - i - 1) * pitch;
+        
+        memcpy(temp, row1, pitch);
+        memcpy(row1, row2, pitch);
+        memcpy(row2, temp, pitch);
+    }
+    
+    delete[] temp;
+
+    SDL_UnlockSurface(surface);
+}
+
+void loadTexture(char* path, GLuint tex[], int index, bool alpha, bool flipVertical) {
+  SDL_Surface *img = NULL;
+  glBindTexture(GL_TEXTURE_2D, tex[index]);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  img = loadImage(path);
+  if (flipVertical) flipSurfaceVertical(img);
+  if (alpha) glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, img->pixels);
+  else       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, img->pixels);
+  SDL_FreeSurface(img);
+
+}
+
+void setupTextures(struct GameData *GD, GLuint tex[]) {
+    SDL_Surface *img = NULL;
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+
+    glGenTextures(1, &GD->null_tex);
+    glGenTextures(numTex, tex);
+
+    glBindTexture(GL_TEXTURE_2D, GD->null_tex);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MAG_FILTER,
+                    GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER,
+                    GL_LINEAR);
+    img = loadImage((char *)"./textures/null.png");
+    glTexImage2D(GL_TEXTURE_2D, 0,
+                GL_RGB, 1, 1, 0,
+                GL_RGB, GL_UNSIGNED_BYTE,
+                img->pixels);
+    SDL_FreeSurface(img);
+
+    loadTexture((char*)"./textures/wall_texture2.png", tex, 0, 0, 0);
+    loadTexture((char*)"./textures/wall_texture_sup2.png", tex, 1, 0, 0);
+    loadTexture((char*)"./textures/block-fixo/1.png", tex, 2, 1, 0);
+    loadTexture((char*)"./textures/block-fixo/5.png", tex, 3, 1, 0);
+    loadTexture((char*)"./textures/block_final_fixo/1.png", tex, 4, 1, 0);
+    loadTexture((char*)"./textures/block_final_fixo/2.png", tex, 5, 1, 0);
+    loadTexture((char*)"./textures/block_final_fixo/3.png", tex, 6, 1, 0);
+    loadTexture((char*)"./textures/block_final_fixo/4.png", tex, 7, 1, 0);
+    loadTexture((char*)"./textures/block_final_movel/1.png", tex, 8, 1, 0);
+    loadTexture((char*)"./textures/block_final_movel/2.png", tex, 9, 1, 0);
+    loadTexture((char*)"./textures/block_final_movel/3.png", tex, 10, 1, 0);
+    loadTexture((char*)"./textures/block_final_movel/4.png", tex, 11, 1, 0);
+    loadTexture((char*)"./textures/wood_block/crate.png", tex, 12, 1, 0);
+    loadTexture((char*)"./textures/wood_block/crate.png", tex, 13, 1, 0);
+    loadTexture((char*)"./textures/wall/wall.png", tex, 14, 1, 0);
+    loadTexture((char*)"./textures/wall/wall.png", tex, 15, 1, 0);
+    loadTexture((char*)"./textures/final_block_transparent/1.png", tex, 16, 1, 0);
+    loadTexture((char*)"./textures/final_block_transparent/1.png", tex, 17, 1, 0);
+    loadTexture((char*)"./textures/block_final_movel/3.png", tex, 18, 1, 0);
+    loadTexture((char*)"./textures/block_final_movel/4.png", tex, 19, 1, 0);
+    loadTexture((char*)"./textures/direction_block/left.png", tex, 20, 1, 1);
+    loadTexture((char*)"./textures/direction_block/right.png", tex, 21, 1, 1);
+    loadTexture((char*)"./textures/direction_block/no_direction.png", tex, 22, 1, 0);
+    loadTexture((char*)"./textures/fluffy_spawn/face.png", tex, 23, 1, 1);
+    loadTexture((char*)"./textures/fluffy_spawn/roof.png", tex, 24, 1, 0);
+    loadTexture((char*)"./textures/door/door.png", tex, 25, 1, 1);
+    loadTexture((char*)"./textures/door/roof.png", tex, 26, 1, 0);
+}
+
+
 
 void spawnMiniFluffy(struct GameData *GD, block *b) {
   GD->miniFluffys[GD->miniFluffyIndex] = new miniFluffy;
@@ -173,20 +260,7 @@ void spawnMiniFluffy(struct GameData *GD, block *b) {
   GD->miniFluffyIndex++;
 }
 
-// posicao aproximado(posicao p) {
-//   return posicao(round(p.x), round(p.y), round(p.z));
-// }
 
-// posicao miniFluffyColision(struct GameData *GD, int j) {
-//   return posicao(GD->miniFluffys[j]->pos) + velocidade(GD->miniFluffys[j]->rotacao);
-//   float diff_z = abs(GD->miniFluffys[j]->pos->z - round(GD->miniFluffys[j]->pos->z));
-//   float diff_x = abs(GD->miniFluffys[j]->pos->x - round(GD->miniFluffys[j]->pos->x));
-//   if (diff_z > 0.43f || diff_x > 0.43f) {
-//     return aproximado(posicao(GD->miniFluffys[j]->pos)) + velocidade(GD->miniFluffys[j]->rotacao);
-//   } else {
-//     return posicao(GD->miniFluffys[j]->pos) + velocidade(GD->miniFluffys[j]->rotacao);
-//   }
-// }
 
 void miniFluffyStageUpdate(struct GameData *GD) {
   if (GD->nMiniFluffysRescued > 0 && GD->nMiniFluffysAlive == GD->nMiniFluffysRescued) {
@@ -999,7 +1073,7 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
     if (tela->selecionaOpcao1)
     {
       GD->fase = 1;
-      loadMap(GD, "mapa/fase0" + to_string(GD->fase) + ".txt");
+      loadMap(GD, "maps/fase0" + to_string(GD->fase) + ".txt");
       estadoJogo = EmJogo;
     }
 
@@ -1034,7 +1108,7 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
       estadoJogo = TelaFinal;
     else
     {
-      loadMap(GD, "mapa/fase0" + to_string(GD->fase) + ".txt");
+      loadMap(GD, "maps/fase0" + to_string(GD->fase) + ".txt");
       estadoJogo = EmJogo;
     }
     break;
@@ -1068,12 +1142,13 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
 
 void passaTelaInstrucao(struct Tela *tela)
 {
-  string dirArquivo = "texture/TelasInstrucoes2/" + to_string(numTelaInstrucao) + ".png";
+  string dirArquivo = "images/instructions/" + to_string(numTelaInstrucao) + ".png";
   static int numTela_atual = -1;
   if (numTela_atual != numTelaInstrucao)
   {
     SDL_FreeSurface(tela->background);
     tela->background = loadImage((char *)dirArquivo.c_str());
+    flipSurfaceVertical(tela->background);
     numTela_atual = numTelaInstrucao;
   }
 }
@@ -1440,28 +1515,6 @@ static void proccessEvents(struct GameData *GD, struct Tela *tela = NULL)
   }
 }
 
-void flipSurfaceVertical(SDL_Surface *surface) 
-{
-    // Permite acesso ao ponteiro pixels da SDL_Surface
-    SDL_LockSurface(surface);
-    
-    int pitch = surface->pitch;
-    char* temp = new char[pitch];
-    char* pixels = (char*) surface->pixels;
-    
-    for(int i = 0; i < surface->h / 2; ++i) {
-        char* row1 = pixels + i * pitch;
-        char* row2 = pixels + (surface->h - i - 1) * pitch;
-        
-        memcpy(temp, row1, pitch);
-        memcpy(row1, row2, pitch);
-        memcpy(row2, temp, pitch);
-    }
-    
-    delete[] temp;
-
-    SDL_UnlockSurface(surface);
-}
 
 int main(int argc, char *argv[])
 {
@@ -1493,45 +1546,51 @@ int main(int argc, char *argv[])
   /* Flags we will pass into SDL_SetVideoMode. */
   int flags = 0;
   GLuint tex[numTex];
-  SDL_Surface *img = NULL;
+  
 
-  SDL_Surface *imgArrow = loadImage((char *)"texture/arrow.png");
+  SDL_Surface *imgArrow = loadImage((char *)"textures/arrow.png");
 
   if (DEBUG)
     fprintf(stderr, "\nPassed line 964\n");
 
-  TelaMenu.background = loadImage((char *)"texture/TelasMenu/menu.png");
+  TelaMenu.background = loadImage((char *)"images/menu/main.png");
+  flipSurfaceVertical(TelaMenu.background);
   TelaMenu.nomeTela = Menu;
   TelaMenu.x1 = 654;
   TelaMenu.y1 = 290;
   TelaMenu.x2 = 680;
   TelaMenu.y2 = 352;
 
-  TelaPause.background = loadImage((char *)"texture/TelasMenu/2_.png");
+  TelaPause.background = loadImage((char *)"images/menu/2.png");
+  flipSurfaceVertical(TelaPause.background);
   TelaPause.nomeTela = Pause;
   TelaPause.x1 = 635;
   TelaPause.y1 = 288;
   TelaPause.x2 = 680;
   TelaPause.y2 = 349;
 
-  TelaGameOver.background = loadImage((char *)"texture/TelasMenu/3_.png");
+  TelaGameOver.background = loadImage((char *)"images/menu/3.png");
+  flipSurfaceVertical(TelaGameOver.background);
   TelaGameOver.nomeTela = Derrota;
   TelaGameOver.x1 = 601;
   TelaGameOver.y1 = 288;
   TelaGameOver.temOpcao2 = false;
 
-  TelaNext.background = loadImage((char *)"texture/TelasMenu/4_.png");
+  TelaNext.background = loadImage((char *)"images/menu/4.png");
+  flipSurfaceVertical(TelaNext.background);
   TelaNext.nomeTela = Vitoria;
   TelaNext.x1 = 702;
   TelaNext.y1 = 352;
   TelaNext.temOpcao2 = false;
 
-  TelaInstrucoes.background = loadImage((char *)"texture/TelasInstrucoes2/1.png");
+  TelaInstrucoes.background = loadImage((char *)"images/instructions/1.png");
+  flipSurfaceVertical(TelaInstrucoes.background);
   TelaInstrucoes.nomeTela = Instrucoes;
   TelaInstrucoes.temOpcao2 = false;
   TelaInstrucoes.showArrow = false;
 
-  TelaTelaFinal.background = loadImage((char *)"texture/TelasMenu/TelaFinal.png");
+  TelaTelaFinal.background = loadImage((char *)"images/menu/final.png");
+  flipSurfaceVertical(TelaTelaFinal.background);
   TelaTelaFinal.nomeTela = Instrucoes;
   TelaTelaFinal.temOpcao2 = false;
   TelaTelaFinal.showArrow = false;
@@ -1555,7 +1614,7 @@ int main(int argc, char *argv[])
 
   // Load music
   // https://www.looperman.com/loops/detail/314853/subspace-club-type-sample-free-115bpm-disco-pad-loop
-  gMusic = Mix_LoadMUS("music/looperman-l-5041336-0314853-subspace-club-type-sample.wav");
+  gMusic = Mix_LoadMUS("musics/looperman-l-5041336-0314853-subspace-club-type-sample.wav");
 
   Window = SDL_CreateWindow("O Pesadelo de Fluffy",
                             0, 0,
@@ -1603,418 +1662,9 @@ int main(int argc, char *argv[])
      * double-buffered window for use with OpenGL.
      */
     setupOpenGL(width, height);
+    setupTextures(&GD, tex);
 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-
-    glEnable(GL_TEXTURE_2D);
-
-    glGenTextures(1, &GD.null_tex);
-    glGenTextures(numTex, tex);
-
-
-    glBindTexture(GL_TEXTURE_2D, GD.null_tex);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"./texture/null.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                GL_RGB, 1, 1, 0,
-                GL_RGB, GL_UNSIGNED_BYTE,
-                img->pixels);
-    // glGenerateMipmap(GL_TEXTURE_2D);
-    SDL_FreeSurface(img);
-
-    glBindTexture(GL_TEXTURE_2D, tex[0]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/wall_texture2.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGB, 512, 512, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-
-    glBindTexture(GL_TEXTURE_2D, tex[1]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/wall_texture_sup2.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGB, 512, 512, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-
-    glBindTexture(GL_TEXTURE_2D, tex[2]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block-fixo/1.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-
-    glBindTexture(GL_TEXTURE_2D, tex[3]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block-fixo/5.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-
-    // bloco final
-    glBindTexture(GL_TEXTURE_2D, tex[4]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_fixo/1.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[5]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_fixo/2.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[6]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_fixo/3.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[7]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_fixo/4.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[8]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_movel/1.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[9]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_movel/2.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[10]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_movel/3.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[11]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_movel/4.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[12]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/wood_block/crate.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[13]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/wood_block/crate.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[14]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/wall/wall.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[15]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/wall/wall.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[16]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/final_block_transparent/1.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[17]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/final_block_transparent/1.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[18]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_movel/3.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[19]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/block_final_movel/4.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[20]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/direction_block/left.png");
-    flipSurfaceVertical(img);
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[21]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/direction_block/right.png");
-    flipSurfaceVertical(img);
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[22]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/direction_block/no_direction.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[23]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/fluffy_spawn/face.png");
-    flipSurfaceVertical(img);
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[24]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/fluffy_spawn/roof.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[25]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/door/door.png");
-    flipSurfaceVertical(img);
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
-    // ---
-    glBindTexture(GL_TEXTURE_2D, tex[26]);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER,
-                    GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR);
-    img = loadImage((char *)"texture/door/roof.png");
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA, 512, 512, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE,
-                 img->pixels);
-    SDL_FreeSurface(img);
   }
-
-  // loadMap(&GD, "mapa/fase01.txt");
 
   /*
    * Now we want to begin our normal app process--
