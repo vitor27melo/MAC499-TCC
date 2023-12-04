@@ -838,12 +838,13 @@ tipoColisao torre::ChecaColisaoPlayer(player * pl, torre * tr){
     block * b2;
     if (pAprox == posicao(pl->pos)) // se esta proximo o bastante para poder interagir
     {
-        b = retornaBloco(pAprox);
-        if (b != nullptr && b->tipo == FinalTargetIncompleto) {
-            return SemColisao;
-        }
+        b = retornaBloco(pAprox); 
         // bloco esmagou
-        if (retornaBloco(pAprox) !=nullptr ) return ColisaoAgressiva;
+        if (b != nullptr && b->tipo != FinalTargetIncompleto) {
+            // std::cout << "COLISAO AGRESSIVA: " <<  b->tipo << "\n";
+            // std::cout << "pAprox: " << b->pos->x << " " << b->pos->y << " " << b->pos->z;
+            return ColisaoAgressiva;
+        }
         // std::cout<< " tipo" << b->tipo;
         // tem bloco na frente
         b2 = retornaBloco(pAprox + pl->rotacao);

@@ -82,17 +82,6 @@ bloco tipo:0
 
  Sobe 
 
-movePlayerBack >> Entrou player back
-Sem bloco atras do player
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:0
-
- ChecaSePodeSubir 
-
- Sobe 
-
 Entrou player front
 
 Sem bloco na frente do player
@@ -233,25 +222,6 @@ Empurra
 
  criaInstanciaDesfaz >> entra
 
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=10
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:6
-ChecaEmpurrar 
-Empurra 
-
- criaInstanciaDesfaz >> entra
-
 updateLista >> tipo de colisao: 1 
 
  ------------
@@ -308,6 +278,59 @@ Sem bloco na frente do player
 player anda
 
 Entrou player front
+ComBlocoNaFrente 
+bloco tipo:7
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:6
+ChecaEmpurrar 
+Empurra 
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=10
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
 
 Sem bloco na frente do player
 player anda
@@ -380,53 +403,12 @@ Sem bloco na frente do player
 player anda
 
 Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:8
-
- ChecaSePodeSubir 
-
- Sobe 
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:9
-
- ChecaSePodeSubir 
-
- Sobe 
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
 ComBlocoNaFrente 
 bloco tipo:6
 ChecaEmpurrar 
 Empurra 
 
  criaInstanciaDesfaz >> entra
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
 
 updateLista >> tipo de colisao: 1 
 
@@ -463,6 +445,38 @@ Entrou player front
 
 Sem bloco na frente do player
 player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:11
+ChecaEmpurrar 
+Empurra 
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=10
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
 
 Entrou player front
 
@@ -497,3 +511,496 @@ updateLista >> tipo de colisao: 1
  ------------
 
 Entrou Update do andar_id=10
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=10
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:11
+ChecaEmpurrar 
+Empurra 
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=10
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:11
+ChecaEmpurrar 
+Empurra 
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=10
+
+Handle Key << proxima 
+
+proximaAca << entrou 
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=3
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =3 ;Numero de blocos =2 ;1o Bloco = (5.000000, 3.000000, 4.000000);2o Bloco = (5.000000, 3.000000, 5.000000);
+
+Entrou player sideways
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=3
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =3 ;Numero de blocos =2 ;1o Bloco = (5.000000, 3.000000, 4.000000);2o Bloco = (5.000000, 3.000000, 5.000000);
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=3
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =3 ;Numero de blocos =2 ;1o Bloco = (5.000000, 3.000000, 4.000000);2o Bloco = (5.000000, 3.000000, 5.000000);
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=3
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =3 ;Numero de blocos =2 ;1o Bloco = (5.000000, 3.000000, 4.000000);2o Bloco = (5.000000, 3.000000, 5.000000);
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=5
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =5 ;Numero de blocos =3 ;1o Bloco = (4.000000, 5.000000, 3.000000);2o Bloco = (4.000000, 5.000000, 4.000000);3o Bloco = (4.000000, 5.000000, 5.000000);
+
+ cai bloco 
+ 
+Entrou Update do andar_id=6
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =6 ;Numero de blocos =3 ;1o Bloco = (3.000000, 6.000000, 5.000000);2o Bloco = (4.000000, 6.000000, 2.000000);3o Bloco = (4.000000, 6.000000, 3.000000);
+
+ cai bloco 
+ 
+Entrou Update do andar_id=7
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =7 ;Numero de blocos =3 ;1o Bloco = (3.000000, 7.000000, 5.000000);2o Bloco = (4.000000, 7.000000, 2.000000);3o Bloco = (4.000000, 7.000000, 3.000000);
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou player sideways
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=7
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =7 ;Numero de blocos =3 ;1o Bloco = (3.000000, 7.000000, 5.000000);2o Bloco = (4.000000, 7.000000, 2.000000);3o Bloco = (4.000000, 7.000000, 3.000000);
+
+ cai bloco 
+ 
+Entrou Update do andar_id=8
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =8 ;Numero de blocos =1 ;1o Bloco = (4.000000, 8.000000, 2.000000);
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:2
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=7
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =7 ;Numero de blocos =2 ;1o Bloco = (3.000000, 7.000000, 5.000000);2o Bloco = (4.000000, 7.000000, 3.000000);
+
+ cai bloco 
+ 
+Entrou Update do andar_id=8
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =8 ;Numero de blocos =1 ;1o Bloco = (4.000000, 8.000000, 2.000000);
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 0 
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou player sideways
+
+Entrou player sideways
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
+
+ ChecaSePodeSubir 
+
+ Sobe 
+
+Entrou player front
+ComBlocoNaFrente 
+bloco tipo:2
+
+ ChecaSePodeSubir 
+
+ Sobe 

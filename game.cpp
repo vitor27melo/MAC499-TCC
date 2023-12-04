@@ -31,7 +31,7 @@ using namespace std;
 
 #define numTex 26
 #define passoCam 2
-#define numFases 3
+#define numFases 2
 #define numTelaInstrucoes 5
 #define MAX_MINI_FLUFFYS 15
 
@@ -49,7 +49,7 @@ int gameSeconds = 0;
 #define MAX_FRAMERATE 0
 
 // This valued multiplied by "deltaTime" to determine how fast things move in the game 
-float speedMult = 4;
+float speedMult = 7;
 
 
 #define PI 3.142857
@@ -252,7 +252,6 @@ void setupTextures(struct GameData *GD, GLuint tex[]) {
 void spawnMiniFluffy(struct GameData *GD, block *b) {
   GD->miniFluffys[GD->miniFluffyIndex] = new miniFluffy;
   // GD->miniFluffys[GD->miniFluffyIndex]->SetMiniFluffy();
-
   // std::cout << "Bloco: " << b->pos->x << " " << b->pos->y << " " << b->pos->z << "\n";
   // std::cout << "minifluffy: " << pos.x << " " << pos.y << " " << pos.z << "\n";
   GD->miniFluffys[GD->miniFluffyIndex]->SetMiniFluffy(b->pos, b->tipo);
@@ -272,7 +271,6 @@ void miniFluffyStageUpdate(struct GameData *GD) {
     
     if (aux != nullptr){
       if (aux->tipo == Fixo || aux->tipo == FluffySpawnRight || aux->tipo == FluffySpawnDown || aux->tipo == FluffySpawnLeft || aux->tipo == FluffySpawnUpwards) {
-        // std::cout << "180";
         GD->miniFluffys[j]->rotacao->vx *= -1;
         GD->miniFluffys[j]->rotacao->vz *= -1;
       } else if (aux->tipo == DirecEsquerda || aux->tipo == DirecDireita) {
@@ -440,18 +438,18 @@ void drawScreen(SDL_Window *Window,
                  Shader simpleShader)
 {
   cont++;
-  // if(cont > 1000) GD->Player->levelStage++;
   if (firstRun) {
-    simpleShader.use();
     firstRun = 0;
   }
-  // updateCamera(GD);
+  simpleShader.use();
+  updateCamera(GD);
   static enum animacaoPlayer last_anim = AnimNormal;
 
   float di, dj, dk;
 
   // Clear the color and depth buffers.
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_LIGHTING);
   glEnable(GL_TEXTURE_2D);
 
   // Configura a matrix de projeção
@@ -794,7 +792,7 @@ void movePlayerFront(struct GameData *GD, bool push)
   block *aux;
 
   // sem bloco na frente
-  if (b == nullptr)
+  if (b == nullptr || b->tipo == FinalTargetIncompleto)
   {
     logfile << "\nSem bloco na frente do player\n";
     logfile << "player anda\n";
@@ -830,7 +828,7 @@ void movePlayerFront(struct GameData *GD, bool push)
         GD->ListaUpdate->AdicionaBloco(b);
       }
     }
-    else if (b->tipo != ApenasEmpurra && b->tipo != Parede && b->tipo != ParedeQuebravel)
+    else if (b->tipo != ApenasEmpurra && b->tipo != Parede && b->tipo != ParedeQuebravel && b->tipo != FinalTargetCompleto)
     {
       // checa se pode subir
       logfile << "\n ChecaSePodeSubir \n";
@@ -952,8 +950,6 @@ void movePlayerSideways(struct GameData *GD, bool right)
 // update player
 static void updatePlayer(player *Player, torre *Torre)
 {
-  // std::cout << " torre nstages:" << Torre->nStages;
-  // std::cout << " player level stage:" << Player->levelStage;
 
   if (Player->levelStage > Torre->nStages ) estadoJogo = Vitoria;
   tipoColisao colisaoTorre;
@@ -1075,6 +1071,7 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
       GD->fase = 1;
       loadMap(GD, "maps/fase0" + to_string(GD->fase) + ".txt");
       estadoJogo = EmJogo;
+      firstRun = 1;
     }
 
     // instrucoes
@@ -1110,6 +1107,8 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
     {
       loadMap(GD, "maps/fase0" + to_string(GD->fase) + ".txt");
       estadoJogo = EmJogo;
+      firstRun = 1;
+      std::cout << GD->Player->levelStage;
     }
     break;
 
@@ -1178,19 +1177,8 @@ void drawMenu(SDL_Window *Window,
     arrowPosition.y = tela->y2;
   }
 
-  // std::cout << "w: " << tela->background->w << " h: " << tela->background->h  << " pixels: " <<tela->background->pixels << "\n";
 
   float fovy = 60.0 * (3.14159 / 180.0);
-  // float height = 600;
-  // float focallength = (height / 2.0) / tan(fovy / 2.0);
-  // glRasterPos3f(-tela->background->w / 2,
-  //               -tela->background->h / 2,
-  //               -(focallength + 0.1));
-  // glDrawPixels(tela->background->w,
-  //              tela->background->h,
-  //              GL_RGBA, GL_UNSIGNED_BYTE,
-  //              tela->background->pixels);
-  // std::cout << -tela->background->w / 2 << " " << -SCR_WIDTH / 2 << " \n";
   float height = SCR_HEIGHT;
   float focallength = (height / 2.0) / tan(fovy / 2.0);
   glRasterPos3f(-SCR_WIDTH / 2,
@@ -1212,10 +1200,7 @@ void drawMenu(SDL_Window *Window,
                  arrow->pixels);
   }
   // Apply the arrow
-
   SDL_GL_SwapWindow(Window);
-  // glEnable(GL_LIGHTING);
-  // glEnable(GL_TEXTURE_2D);
 }
 
 // input
@@ -1235,10 +1220,10 @@ static void handleKey(SDL_KeyboardEvent *key, struct GameData *GD, bool down,
       quitGame(0);
     break;
 
-  case SDLK_SPACE:
-    if (down && podeMover)
-      aplicaDesfaz(GD);
-    break;
+  // case SDLK_SPACE:
+  //   if (down && podeMover)
+  //     aplicaDesfaz(GD);
+  //   break;
 
   case SDLK_LEFT:
     if (down)
@@ -1346,8 +1331,8 @@ static void handleKey(SDL_KeyboardEvent *key, struct GameData *GD, bool down,
     //     GD->zoom += passoCam;
     //   }
     //   break;
-  case SDLK_h:
-    GD->Player->levelStage = 4;
+  // case SDLK_h:
+  //   GD->Player->levelStage = 4;
     // camera.ChangePitch(-1*(deltaTime * 10));
     // std::cout << camera.Pitch << "\n";
     // std::cout << camera.Pitch << "\n";
@@ -1719,12 +1704,11 @@ int main(int argc, char *argv[])
 
     if (estadoJogo == Vitoria)
     {
-      // std::cout << " Vitoria\n";
       GD.miniFluffyIndex = 0;
       GD.nMiniFluffysAlive = 0;       
       GD.nMiniFluffysRescued = 0;       
-      GD.nMiniFluffysDead = 0;  
-      GD.Player->levelStage = 3;
+      GD.nMiniFluffysDead = 0; 
+      GD.Player->levelStage = 1;
       proccessEvents(&GD, &TelaNext);
       drawMenu(Window, &TelaNext, imgArrow);
     }
@@ -1746,13 +1730,13 @@ int main(int argc, char *argv[])
     secondCount += deltaTime;
     if (secondCount >= 1.0f) {
       gameSeconds++;
-      std::cout << "Framerate: " << 1.0f/deltaTime << "\n";
+      // std::cout << "Framerate: " << 1.0f/deltaTime << "\n";
       secondCount = 0;
     }
     // std::cout << deltaTime << "\n";
     lastFrame = currentFrame;
 
-    // SDL_Delay(1000);
+    // SDL_Delay(1);
   }
 
   logfile.close();
