@@ -1,5 +1,5 @@
-# TCC2022-jogoPuzzle
-TCC realizado em 2022 para o curso do BCC no IME-USP. Criação de um jogo Puzzle escalada 3d
+# TCC2023
+TCC realizado em 2023 para o curso do BCC no IME-USP.
 
 Para compilar o jogo:
 
