@@ -886,8 +886,9 @@ tipoColisao torre::ChecaColisao(block * b){
     if (pAprox == posicao(b->pos)){
         andar * a = retornaAndarN((int) pAprox.y - 1);
 
-        if (a == nullptr) return ColisaoAgressiva; // bloco ja saiu da torre, deve ser destruido
-
+        if (a == nullptr) {
+            return ColisaoAgressiva; // bloco ja saiu da torre, deve ser destruido
+        }
         if (a->temSuporte(b)) return ColisaoDeApoio;
     }
     return SemColisao;    

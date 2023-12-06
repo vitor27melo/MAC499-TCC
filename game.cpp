@@ -263,6 +263,8 @@ void spawnMiniFluffy(struct GameData *GD, block *b) {
 
 void miniFluffyStageUpdate(struct GameData *GD) {
   if (GD->nMiniFluffysRescued > 0 && GD->nMiniFluffysAlive == GD->nMiniFluffysRescued) {
+    // std::cout << "avançou stage\n";
+    // std::cout << "n stages" << GD->Torre->nStages;
     GD->Player->levelStage++;
   }
   for (int j = 0; j < GD->nMiniFluffysAlive; j++) {
@@ -345,6 +347,7 @@ void blockStageUpdate(struct GameData *GD, block *b) {
 }
 
 bool blockStageCheck(struct GameData *GD, block *b) {
+
   int stage = GD->Player->levelStage;
   if (b->alphaValue >= 1.0f) return true;
   else if (b->levelStage <= stage && !b->dissapearing) {
@@ -437,7 +440,15 @@ void drawScreen(SDL_Window *Window,
                  GLuint tex[],
                  Shader simpleShader)
 {
+  int count = 0;
   cont++;
+  for (andar *a = GD->Torre->primeiroAndar; a != nullptr; a = a->prox)
+  {
+    for (block *b = a->Lista->lista; b != nullptr; b = b->prox)
+    {
+      count++;
+    }
+  }
   if (firstRun) {
     firstRun = 0;
   }
@@ -485,6 +496,7 @@ void drawScreen(SDL_Window *Window,
     {
       blockStageUpdate(GD, b);
       if (!blockStageCheck(GD, b)) continue;
+      // count++;
       dj = b->pos->x;
       di = b->pos->y;
       dk = b->pos->z;
@@ -528,6 +540,7 @@ void drawScreen(SDL_Window *Window,
   // // desenha lista updates
   for (block * b = GD->ListaUpdate->lista; b != nullptr; b = b->prox){
       if (!blockStageCheck(GD, b)) continue;
+      // count ++;
       dj = b->pos->x;
       di = b->pos->y;
       dk = b->pos->z;
@@ -561,7 +574,7 @@ void drawScreen(SDL_Window *Window,
     }
   }
 
-
+  // std::cout << "nblock " << count << "\n";
   simpleShader.setFloat("alphaVal", 1.0f);
   switch (GD->Player->animacao)
   {
@@ -764,6 +777,8 @@ void UpdateAndar(LLBlocos *ListaUpdate, torre *Torre, int n)
         houveMudanca = true;
         aux->setPosLim(posicao(aux->pos));
         aux->setVel(velocidade(0, 0, 0));
+        // std::cout << "tipo bloco ejetado " << aux->tipo << "\n";
+
         atual->EjetaBloco(aux);
         ListaUpdate->AdicionaBloco(aux);
       }
@@ -1037,6 +1052,8 @@ static void updateLista(LLBlocos *ListaUpdate, torre *Torre, player *Player)
         else if (colisao == ColisaoAgressiva)
         {
           logfile << "\n Deleta Bloco \n";
+          std::cout << "tipo bloco ejetado " << aux->tipo << "\n";
+
           ListaUpdate->EjetaBloco(aux);
           delete aux;
         }
@@ -1108,11 +1125,16 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
       loadMap(GD, "maps/fase0" + to_string(GD->fase) + ".txt");
       estadoJogo = EmJogo;
       firstRun = 1;
-      std::cout << GD->Player->levelStage;
+      std::cout << "vITORIA" <<GD->Player->levelStage;
     }
     break;
 
   case Derrota:
+    GD->miniFluffyIndex = 0;
+    GD->nMiniFluffysAlive = 0;       
+    GD->nMiniFluffysRescued = 0;       
+    GD->nMiniFluffysDead = 0; 
+    GD->Player->levelStage = 1;
     GD->fase = 1;
     logfile << "\nproximaAca << GameOver \n";
     estadoJogo = Menu;
@@ -1700,17 +1722,22 @@ int main(int argc, char *argv[])
     {
       proccessEvents(&GD, &TelaGameOver);
       drawMenu(Window, &TelaGameOver, imgArrow);
-    }
-
-    if (estadoJogo == Vitoria)
-    {
       GD.miniFluffyIndex = 0;
       GD.nMiniFluffysAlive = 0;       
       GD.nMiniFluffysRescued = 0;       
       GD.nMiniFluffysDead = 0; 
       GD.Player->levelStage = 1;
+    }
+
+    if (estadoJogo == Vitoria)
+    {
       proccessEvents(&GD, &TelaNext);
       drawMenu(Window, &TelaNext, imgArrow);
+      GD.miniFluffyIndex = 0;
+      GD.nMiniFluffysAlive = 0;       
+      GD.nMiniFluffysRescued = 0;       
+      GD.nMiniFluffysDead = 0; 
+      GD.Player->levelStage = 1;
     }
 
     if (estadoJogo == TelaFinal)
