@@ -1679,7 +1679,7 @@ int main(int argc, char *argv[])
    */
 
   // Play the music
-  //  Mix_PlayMusic( gMusic, -1 );
+  Mix_PlayMusic( gMusic, -1 );
 
   Shader simpleShader("./shaders/shader.vs", "./shaders/shader.fs");
   setupBlockVAO(d);
