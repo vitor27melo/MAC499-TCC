@@ -31,10 +31,12 @@ using namespace std;
 
 #define numTex 26
 #define passoCam 2
-#define numFases 2
+#define numFases 4
 #define numTelaInstrucoes 5
 #define MAX_MINI_FLUFFYS 15
+#define MINI_FLUFFY_LIMITER 2
 
+int startMap = 1;
 int firstRun = 1;
 
 // "Dimension": Vector size multiplier
@@ -265,9 +267,11 @@ void miniFluffyStageUpdate(struct GameData *GD) {
   if (GD->nMiniFluffysRescued > 0 && GD->nMiniFluffysAlive == GD->nMiniFluffysRescued) {
     // std::cout << "avançou stage\n";
     // std::cout << "n stages" << GD->Torre->nStages;
+    std::cout << "AUMENTOU";
     GD->Player->levelStage++;
   }
   for (int j = 0; j < GD->nMiniFluffysAlive; j++) {
+    if (GD->miniFluffys[j] == NULL) continue;
     posicao posDesejada = posicao(GD->miniFluffys[j]->pos) + velocidade(GD->miniFluffys[j]->rotacao);
     block *aux = GD->Torre->retornaBloco(posDesejada);
     
@@ -321,7 +325,9 @@ void miniFluffyStageUpdate(struct GameData *GD) {
           }
       } else if (aux->tipo == FluffyDestination) {
         GD->nMiniFluffysRescued++;
-        // GD->miniFluffys[j] = nullptr;
+        std::cout << "minifluffy rescued\n";
+        GD->miniFluffys[j] = NULL;
+        continue;
       }
     }
     GD->miniFluffys[j]->mexe(posDesejada, velocidade(GD->miniFluffys[j]->rotacao), deltaTime * speedMult);
@@ -333,10 +339,11 @@ void blockStageUpdate(struct GameData *GD, block *b) {
   int stage = GD->Player->levelStage;
   static int seconds = 0;
   if (b->tipo == ParedeQuebravel && b->levelStage < stage) GD->Torre->EjetaBloco(b);
+  if (b->tipo == FluffySpawnRight || b->tipo == FluffySpawnDown || b->tipo == FluffySpawnDown || b->tipo == FluffySpawnUpwards)  std::cout << "levelstage: " << b->levelStage << " player: " << GD->Player->levelStage << "\n";
   if (
     (b->tipo == FluffySpawnRight || b->tipo == FluffySpawnDown || b->tipo == FluffySpawnDown || b->tipo == FluffySpawnUpwards) &&
     b->levelStage == GD->Player->levelStage &&
-    b->miniFluffysSpawned < 1 &&
+    b->miniFluffysSpawned < MINI_FLUFFY_LIMITER &&
     seconds < gameSeconds
   ) {
       seconds = gameSeconds;
@@ -416,16 +423,16 @@ void updateCamera(struct GameData *GD) {
       if ((camera.Position[1] - (GD->Player->pos->y * d)) > 400.0f) {
         camera.Position[1] -= deltaTime * speedMult * d;
       }
-      if ((camera.Position[0] - (GD->Player->pos->x * d)) < 300.0f) {
+      if ((camera.Position[0] - (GD->Player->pos->x * d)) < 200.0f) {
         camera.Position[0] += deltaTime * speedMult * d;
       }
-      if ((camera.Position[0] - (GD->Player->pos->x * d)) > 300.0f) {
+      if ((camera.Position[0] - (GD->Player->pos->x * d)) > 200.0f) {
         camera.Position[0] -= deltaTime * speedMult * d;
       }
-      if ((camera.Position[2] - (GD->Player->pos->z * d)) < -300.0f) {
+      if ((camera.Position[2] - (GD->Player->pos->z * d)) < -200.0f) {
         camera.Position[2] += deltaTime * speedMult * d;
       }
-      if ((camera.Position[2] - (GD->Player->pos->z * d)) > -300.0f) {
+      if ((camera.Position[2] - (GD->Player->pos->z * d)) > -200.0f) {
         camera.Position[2] -= deltaTime * speedMult * d;
       }
       
@@ -568,9 +575,8 @@ void drawScreen(SDL_Window *Window,
 
   // TESTE MINI FLUFFY
   for (int j = 0; j < GD->miniFluffyIndex; j++) {
-    if (GD->miniFluffys[j] != NULL && GD->miniFluffys[j] != nullptr) {
+    if (GD->miniFluffys[j] != NULL) {
       DrawFluffyWalk(simpleShader.ID, deltaTime, restart, GD->miniFluffys[j]->pos, GD->miniFluffys[j]->rotacao, 0.5f);
-
     }
   }
 
@@ -1085,7 +1091,7 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
     // inicia fase 1
     if (tela->selecionaOpcao1)
     {
-      GD->fase = 1;
+      GD->fase = startMap;
       loadMap(GD, "maps/fase0" + to_string(GD->fase) + ".txt");
       estadoJogo = EmJogo;
       firstRun = 1;
@@ -1122,10 +1128,15 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
       estadoJogo = TelaFinal;
     else
     {
+      GD->miniFluffyIndex = 0;
+      GD->nMiniFluffysAlive = 0;       
+      GD->nMiniFluffysRescued = 0;       
+      GD->nMiniFluffysDead = 0; 
+      GD->Player->levelStage = 1;
+      std::cout << "VITORIA";
       loadMap(GD, "maps/fase0" + to_string(GD->fase) + ".txt");
       estadoJogo = EmJogo;
       firstRun = 1;
-      std::cout << "vITORIA" <<GD->Player->levelStage;
     }
     break;
 
@@ -1525,6 +1536,10 @@ static void proccessEvents(struct GameData *GD, struct Tela *tela = NULL)
 
 int main(int argc, char *argv[])
 {
+  if (argc > 1) {
+    startMap = atoi(argv[1]);
+    std::cout<<argv[1];
+  }
   struct GameData GD;
   GD.Player = new player;
   GD.Torre = new torre;
