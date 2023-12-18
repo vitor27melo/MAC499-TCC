@@ -1364,10 +1364,11 @@ static void handleKey(SDL_KeyboardEvent *key, struct GameData *GD, bool down,
     break;
 
   case SDLK_l:
-    if (cameraLock) cameraLock = false;
-    else cameraLock = true;
-    std::cout << "banana " << cameraLock << "\n";
-    break;
+    if (down) {
+      if (cameraLock) cameraLock = false;
+      else cameraLock = true;
+      break;
+    }
 
   case SDLK_o: // pause/play music
     if (down)
@@ -1463,6 +1464,9 @@ static void proccessEvents(struct GameData *GD, struct Tela *tela = NULL)
       /* Handle key presses. */
       handleKey(&event.key, GD, true, tela);
 
+      break;
+    case SDL_KEYUP:
+      handleKey(&event.key, GD, false);
       break;
     case SDL_QUIT:
       /* Handle quit requests (like Ctrl-c). */

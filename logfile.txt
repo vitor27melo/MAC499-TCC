@@ -9,83 +9,61 @@ Entrou player front
 Sem bloco na frente do player
 player anda
 
+ Player caiu do mapa 
+
+Handle Key << proxima 
+
+proximaAca << entrou 
+
+proximaAca << GameOver 
+
+Handle Key << proxima 
+
+proximaAca << entrou 
+
+Entrou player front
+
+Sem bloco na frente do player
+player anda
+
+movePlayerBack >> Entrou player back
+Sem bloco atras do player
+movePlayerBack >> puxa
+
+ criaInstanciaDesfaz >> entra
+
+updateLista >> tipo de colisao: 1 
+
+ ------------
+
+Entrou Update do andar_id=3
+
+ Dando Update em andar
+ 
+ Andar Atual antes: Andar id =3 ;Numero de blocos =5 ;1o Bloco = (5.000000, 3.000000, 2.000000);2o Bloco = (5.000000, 3.000000, 5.000000);3o Bloco = (5.000000, 3.000000, 6.000000);4o Bloco = (5.000000, 3.000000, 7.000000);5o Bloco = (5.000000, 3.000000, 8.000000);
+
+Entrou player sideways
+
 Entrou player front
 ComBlocoNaFrente 
-bloco tipo:12
+bloco tipo:0
 
  ChecaSePodeSubir 
 
  Sobe 
 
 Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
 ComBlocoNaFrente 
-bloco tipo:12
+bloco tipo:0
 
  ChecaSePodeSubir 
 
  Sobe 
 
 Entrou player front
+ComBlocoNaFrente 
+bloco tipo:0
 
-Sem bloco na frente do player
-player anda
+ ChecaSePodeSubir 
 
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
+ Sobe 
