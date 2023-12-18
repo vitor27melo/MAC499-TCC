@@ -36,6 +36,7 @@ using namespace std;
 #define MAX_MINI_FLUFFYS 15
 #define MINI_FLUFFY_LIMITER 2
 
+bool cameraLock = true;
 int startMap = 1;
 int firstRun = 1;
 
@@ -254,8 +255,6 @@ void setupTextures(struct GameData *GD, GLuint tex[]) {
 void spawnMiniFluffy(struct GameData *GD, block *b) {
   GD->miniFluffys[GD->miniFluffyIndex] = new miniFluffy;
   // GD->miniFluffys[GD->miniFluffyIndex]->SetMiniFluffy();
-  // std::cout << "Bloco: " << b->pos->x << " " << b->pos->y << " " << b->pos->z << "\n";
-  // std::cout << "minifluffy: " << pos.x << " " << pos.y << " " << pos.z << "\n";
   GD->miniFluffys[GD->miniFluffyIndex]->SetMiniFluffy(b->pos, b->tipo);
   // GD->miniFluffys[GD->miniFluffyIndex]->teste(5);
   GD->miniFluffyIndex++;
@@ -265,9 +264,6 @@ void spawnMiniFluffy(struct GameData *GD, block *b) {
 
 void miniFluffyStageUpdate(struct GameData *GD) {
   if (GD->nMiniFluffysRescued > 0 && GD->nMiniFluffysAlive == GD->nMiniFluffysRescued) {
-    // std::cout << "avançou stage\n";
-    // std::cout << "n stages" << GD->Torre->nStages;
-    std::cout << "AUMENTOU";
     GD->Player->levelStage++;
   }
   for (int j = 0; j < GD->nMiniFluffysAlive; j++) {
@@ -325,7 +321,6 @@ void miniFluffyStageUpdate(struct GameData *GD) {
           }
       } else if (aux->tipo == FluffyDestination) {
         GD->nMiniFluffysRescued++;
-        std::cout << "minifluffy rescued\n";
         GD->miniFluffys[j] = NULL;
         continue;
       }
@@ -339,7 +334,6 @@ void blockStageUpdate(struct GameData *GD, block *b) {
   int stage = GD->Player->levelStage;
   static int seconds = 0;
   if (b->tipo == ParedeQuebravel && b->levelStage < stage) GD->Torre->EjetaBloco(b);
-  if (b->tipo == FluffySpawnRight || b->tipo == FluffySpawnDown || b->tipo == FluffySpawnDown || b->tipo == FluffySpawnUpwards)  std::cout << "levelstage: " << b->levelStage << " player: " << GD->Player->levelStage << "\n";
   if (
     (b->tipo == FluffySpawnRight || b->tipo == FluffySpawnDown || b->tipo == FluffySpawnDown || b->tipo == FluffySpawnUpwards) &&
     b->levelStage == GD->Player->levelStage &&
@@ -414,8 +408,11 @@ void updateCamera(struct GameData *GD) {
       }
     break;
     case MiniFluffys:
-      if (camera.Pitch < -50.0f) {
+      if (camera.Pitch < -60.0f) {
         camera.ChangePitch(1*(deltaTime * 25));
+      }
+      if (camera.Pitch > -40.0f) {
+        camera.ChangePitch(-1*(deltaTime * 25));
       }
       if ((camera.Position[1] - (GD->Player->pos->y * d)) < 400.0f) {
         camera.Position[1] += deltaTime * speedMult * d;
@@ -460,7 +457,7 @@ void drawScreen(SDL_Window *Window,
     firstRun = 0;
   }
   simpleShader.use();
-  updateCamera(GD);
+  if (cameraLock) updateCamera(GD);
   static enum animacaoPlayer last_anim = AnimNormal;
 
   float di, dj, dk;
@@ -580,7 +577,6 @@ void drawScreen(SDL_Window *Window,
     }
   }
 
-  // std::cout << "nblock " << count << "\n";
   simpleShader.setFloat("alphaVal", 1.0f);
   switch (GD->Player->animacao)
   {
@@ -783,7 +779,6 @@ void UpdateAndar(LLBlocos *ListaUpdate, torre *Torre, int n)
         houveMudanca = true;
         aux->setPosLim(posicao(aux->pos));
         aux->setVel(velocidade(0, 0, 0));
-        // std::cout << "tipo bloco ejetado " << aux->tipo << "\n";
 
         atual->EjetaBloco(aux);
         ListaUpdate->AdicionaBloco(aux);
@@ -818,7 +813,6 @@ void movePlayerFront(struct GameData *GD, bool push)
     logfile << "\nSem bloco na frente do player\n";
     logfile << "player anda\n";
     Player->mexe(posDesejada, velocidade(Player->rotacao), deltaTime * speedMult);
-    //  std::cout << "Velx: " << Player->rotacao->vx << "Vely: " << Player->rotacao->vy << "Velz: " << Player->rotacao->vz << " *X:" << GD->Player->pos->x << " Y: " << GD->Player->pos->y << " Z: "<< GD->Player->pos->z << "\n";
     Player->animacao = AnimAnda;
   }
   // com bloco na frente
@@ -1058,7 +1052,6 @@ static void updateLista(LLBlocos *ListaUpdate, torre *Torre, player *Player)
         else if (colisao == ColisaoAgressiva)
         {
           logfile << "\n Deleta Bloco \n";
-          std::cout << "tipo bloco ejetado " << aux->tipo << "\n";
 
           ListaUpdate->EjetaBloco(aux);
           delete aux;
@@ -1133,7 +1126,6 @@ void proximaAcao(struct GameData *GD, struct Tela *tela)
       GD->nMiniFluffysRescued = 0;       
       GD->nMiniFluffysDead = 0; 
       GD->Player->levelStage = 1;
-      std::cout << "VITORIA";
       loadMap(GD, "maps/fase0" + to_string(GD->fase) + ".txt");
       estadoJogo = EmJogo;
       firstRun = 1;
@@ -1358,22 +1350,6 @@ static void handleKey(SDL_KeyboardEvent *key, struct GameData *GD, bool down,
     if (down)
       GD->theta_y -= 1.0;
     break;
-
-    // case SDLK_a: // controle no plano
-    //   if(down) {
-    //     GD->zoom += passoCam;
-    //   }
-    //   break;
-  // case SDLK_h:
-  //   GD->Player->levelStage = 4;
-    // camera.ChangePitch(-1*(deltaTime * 10));
-    // std::cout << camera.Pitch << "\n";
-    // std::cout << camera.Pitch << "\n";
-    // camera.ProcessKeyboard(UP, speedMult);
-    // std::cout << "UP: " << glm::to_string(camera.WorldUp) << "\n";
-    // camera.Position += glm::vec3(0.0f, 1.0f, 0.0f);
-    // std::cout << "UP: " << glm::to_string(camera.Position) << "\n\n\n";
-    break;
   case SDLK_w:
     camera.ProcessKeyboard(FORWARD, speedMult);
     break;
@@ -1387,11 +1363,11 @@ static void handleKey(SDL_KeyboardEvent *key, struct GameData *GD, bool down,
     camera.ProcessKeyboard(RIGHT, speedMult);
     break;
 
-    // case SDLK_s:
-    //   if(down) {
-    //     GD->zoom -= passoCam;
-    //   }
-    //   break;
+  case SDLK_l:
+    if (cameraLock) cameraLock = false;
+    else cameraLock = true;
+    std::cout << "banana " << cameraLock << "\n";
+    break;
 
   case SDLK_o: // pause/play music
     if (down)
@@ -1488,9 +1464,6 @@ static void proccessEvents(struct GameData *GD, struct Tela *tela = NULL)
       handleKey(&event.key, GD, true, tela);
 
       break;
-    case SDL_KEYUP:
-      handleKey(&event.key, GD, false);
-      break;
     case SDL_QUIT:
       /* Handle quit requests (like Ctrl-c). */
       quitGame(0);
@@ -1538,7 +1511,6 @@ int main(int argc, char *argv[])
 {
   if (argc > 1) {
     startMap = atoi(argv[1]);
-    std::cout<<argv[1];
   }
   struct GameData GD;
   GD.Player = new player;
@@ -1775,7 +1747,6 @@ int main(int argc, char *argv[])
       // std::cout << "Framerate: " << 1.0f/deltaTime << "\n";
       secondCount = 0;
     }
-    // std::cout << deltaTime << "\n";
     lastFrame = currentFrame;
 
     // SDL_Delay(1);

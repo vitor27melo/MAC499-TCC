@@ -12,16 +12,10 @@ player anda
 Entrou player front
 ComBlocoNaFrente 
 bloco tipo:12
-ChecaEmpurrar 
-Empurra 
 
- criaInstanciaDesfaz >> entra
+ ChecaSePodeSubir 
 
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
+ Sobe 
 
 Entrou player front
 
@@ -31,168 +25,10 @@ player anda
 Entrou player front
 ComBlocoNaFrente 
 bloco tipo:12
-ChecaEmpurrar 
-Empurra 
 
- criaInstanciaDesfaz >> entra
+ ChecaSePodeSubir 
 
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:12
-ChecaEmpurrar 
-Empurra 
-
- criaInstanciaDesfaz >> entra
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:12
-ChecaEmpurrar 
-Empurra 
-
- criaInstanciaDesfaz >> entra
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:12
-ChecaEmpurrar 
-Empurra 
-
- criaInstanciaDesfaz >> entra
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:12
-ChecaEmpurrar 
-Empurra 
-
- criaInstanciaDesfaz >> entra
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-ComBlocoNaFrente 
-bloco tipo:12
-ChecaEmpurrar 
-Empurra 
-
- criaInstanciaDesfaz >> entra
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-movePlayerBack >> Entrou player back
-Sem bloco atras do player
-movePlayerBack >> puxa
-
- criaInstanciaDesfaz >> entra
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
+ Sobe 
 
 Entrou player front
 
@@ -248,40 +84,6 @@ Entrou player front
 
 Sem bloco na frente do player
 player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-Entrou player front
-
-Sem bloco na frente do player
-player anda
-
-movePlayerBack >> Entrou player back
-Sem bloco atras do player
-movePlayerBack >> puxa
-
- criaInstanciaDesfaz >> entra
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
-
-movePlayerBack >> Entrou player back
-Sem bloco atras do player
-movePlayerBack >> puxa
-
- criaInstanciaDesfaz >> entra
-
-updateLista >> tipo de colisao: 1 
-
- ------------
-
-Entrou Update do andar_id=3
 
 Entrou player front
 
